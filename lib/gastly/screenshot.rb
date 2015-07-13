@@ -24,5 +24,37 @@ module Gastly
       kwargs.each { |key, value| instance_variable_set(:"@#{key}", value) }
     end
 
+    def timeout
+      @timeout || DEFAULT_TIMEOUT
+    end
+
+    def browser_width
+      @browser_width || DEFAULT_BROWSER_WIDTH
+    end
+
+    def browser_height
+      @browser_height || DEFAULT_BROWSER_HEIGHT
+    end
+
+    def capture
+      tempfile = Tempfile.new([DEFAULT_FILE_NAME, DEFAULT_FILE_FORMAT])
+
+      params = {
+        url:      url,
+        timeout:  timeout,
+        width:    browser_width,
+        height:   browser_height,
+        output:   tempfile.path
+      }
+
+      params[:selector] = selector if selector.present?
+      params[:cookies]  = cookies.map { |k, v| "#{k}=#{v}" }.join(',') if cookies.present?
+      prepared_params   = params.map { |k, v| "#{k}=#{v}" }
+
+      Phantomjs.run(SCRIPT_PATH.to_s, *prepared_params)
+
+      Gastly::Image.new(tempfile)
+    end
+
   end
 end
