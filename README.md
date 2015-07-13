@@ -23,35 +23,35 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-    Gastly.capture('http://google.com', 'output.png')
+Gastly.capture('http://google.com', 'output.png')
 ```
 
 It is also possible to further customize the creation of screenshots and further processing of the resulting image:
 
 ```ruby
-    screenshot = Gastly.screenshot('http://google.com')
-    screenshot.selector = '#hplogo' # By default, the full screen is captured
-    screenshot.browser_width = 1280 # Default: 1440px
-    screenshot.browser_height = 780 # Default: 900px
-    screenshot.timeout = 1000 # Default: 0 seconds
-    screenshot.cookies = { user_id: 1, auth_token: 'abcd' } # If you need
-    image = screenshot.capture
+screenshot = Gastly.screenshot('http://google.com')
+screenshot.selector = '#hplogo' # By default, the full screen is captured
+screenshot.browser_width = 1280 # Default: 1440px
+screenshot.browser_height = 780 # Default: 900px
+screenshot.timeout = 1000 # Default: 0 seconds
+screenshot.cookies = { user_id: 1, auth_token: 'abcd' } # If you need
+image = screenshot.capture
 ```
 
 or
 
 ```ruby
-    screenshot = Gastly.screenshot('http://google.com', selector: '#hplogo', timeout: 1000)
-    image = screenshot.capture
+screenshot = Gastly.screenshot('http://google.com', selector: '#hplogo', timeout: 1000)
+image = screenshot.capture
 ```
 
 You can resize or change the format of the screenshot:
 
 ```ruby
-    image = screenshot.capture
-    image.resize(width: 110, height: 110) # Creates a previews of web-page
-    image.format('png')
-    image.save('output.png')
+image = screenshot.capture
+image.resize(width: 110, height: 110) # Creates a previews of web-page
+image.format('png')
+image.save('output.png')
 ```
 
 ## Development
