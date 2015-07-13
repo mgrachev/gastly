@@ -6,7 +6,7 @@ module Gastly
     attr_reader :file
 
     def initialize(tempfile)
-      @file = MiniMagick::Image.open(tempfile.path, 'png')
+      @file = MiniMagick::Image.open(tempfile.path)
       tempfile.unlink
     end
 
