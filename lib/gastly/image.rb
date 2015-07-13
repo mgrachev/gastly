@@ -19,5 +19,10 @@ module Gastly
       @file.format(ext)
     end
 
+    def save(output)
+      @file.write(output)
+      output
+    end
+
   end
 end
