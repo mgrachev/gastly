@@ -38,7 +38,7 @@ screenshot.cookies = { user_id: 1, auth_token: 'abcd' } # If you need
 image = screenshot.capture
 ```
 
-or
+Or
 
 ```ruby
 screenshot = Gastly.screenshot('http://google.com', selector: '#hplogo', timeout: 1000)
