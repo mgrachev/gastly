@@ -1,8 +1,8 @@
 # Gastly
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/gastly`. To experiment with that code, run `bin/console` for an interactive prompt.
+Create screenshots or previews of web pages using Gastly. Under the hood Phantom.js and MiniMagick. Gastly, I choose you!
 
-TODO: Delete this and the text above, and describe your gem
+![Gastly](https://github.com/mgrachev/gastly/raw/master/gastly.png)
 
 ## Installation
 
@@ -22,7 +22,37 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+    Gastly.capture('http://google.com', 'output.png')
+```
+
+It is also possible to further customize the creation of screenshots and further processing of the resulting image:
+
+```ruby
+    screenshot = Gastly.screenshot('http://google.com')
+    screenshot.selector = '#hplogo' # By default, the full screen is captured
+    screenshot.browser_width = 1280 # Default: 1440px
+    screenshot.browser_height = 780 # Default: 900px
+    screenshot.timeout = 1000 # Default: 0 seconds
+    screenshot.cookies = { user_id: 1, auth_token: 'abcd' } # If you need
+    image = screenshot.capture
+```
+
+or
+
+```ruby
+    screenshot = Gastly.screenshot('http://google.com', selector: '#hplogo', timeout: 1000)
+    image = screenshot.capture
+```
+
+You can resize or change the format of the screenshot:
+
+```ruby
+    image = screenshot.capture
+    image.resize(width: 110, height: 110) # Creates a previews of web-page
+    image.format('png')
+    image.save('output.png')
+```
 
 ## Development
 
