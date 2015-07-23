@@ -35,6 +35,8 @@ screenshot.browser_width = 1280 # Default: 1440px
 screenshot.browser_height = 780 # Default: 900px
 screenshot.timeout = 1000 # Default: 0 seconds
 screenshot.cookies = { user_id: 1, auth_token: 'abcd' } # If you need
+screenshot.proxy_host = '10.10.10.1' # If you want to use a proxy
+screenshot.proxy_port = '8080'
 image = screenshot.capture
 ```
 

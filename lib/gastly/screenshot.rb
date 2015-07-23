@@ -13,10 +13,10 @@ module Gastly
     DEFAULT_FILE_FORMAT = '.png'.freeze
 
     attr_writer :timeout, :browser_width, :browser_height
-    attr_accessor :url, :selector, :cookies
+    attr_accessor :url, :selector, :cookies, :proxy_host, :proxy_port
 
     def initialize(url, **kwargs)
-      kwargs.assert_valid_keys(:timeout, :browser_width, :browser_height, :selector, :cookies)
+      kwargs.assert_valid_keys(:timeout, :browser_width, :browser_height, :selector, :cookies, :proxy_host, :proxy_port)
 
       @url = url
       self.cookies = kwargs.delete(:cookies)
@@ -51,9 +51,18 @@ module Gastly
       params[:cookies]  = cookies.map { |k, v| "#{k}=#{v}" }.join(',') if cookies.present?
       prepared_params   = params.map { |k, v| "#{k}=#{v}" }
 
-      Phantomjs.run(SCRIPT_PATH.to_s, *prepared_params)
+      Phantomjs.proxy_host = proxy_host if proxy_host
+      Phantomjs.proxy_port = proxy_port if proxy_port
+      Phantomjs.run(proxy_options, SCRIPT_PATH.to_s, *prepared_params)
 
       Gastly::Image.new(tempfile)
+    end
+
+    private
+
+    def proxy_options
+      return '' if proxy_host.blank? && proxy_port.blank?
+      "--proxy=#{proxy_host}:#{proxy_port}"
     end
 
   end
