@@ -5,6 +5,8 @@ require 'active_support/core_ext/object/blank'
 module Gastly
   class Screenshot
 
+    FetchError = Class.new(StandardError)
+
     SCRIPT_PATH = File.expand_path('../script.js', __FILE__)
     DEFAULT_TIMEOUT = 0
     DEFAULT_BROWSER_WIDTH = 1440
@@ -53,7 +55,9 @@ module Gastly
 
       Phantomjs.proxy_host = proxy_host if proxy_host
       Phantomjs.proxy_port = proxy_port if proxy_port
-      Phantomjs.run(proxy_options, SCRIPT_PATH.to_s, *prepared_params)
+      output = Phantomjs.run(proxy_options, SCRIPT_PATH.to_s, *prepared_params)
+
+      raise FetchError, output if output.present?
 
       Gastly::Image.new(tempfile)
     end
