@@ -1,5 +1,6 @@
 require_relative 'gastly/image'
 require_relative 'gastly/screenshot'
+require_relative 'gastly/exceptions'
 require_relative 'gastly/version'
 
 module Gastly
