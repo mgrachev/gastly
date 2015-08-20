@@ -1,5 +1,9 @@
 # Gastly
 
+[![Gem Version](https://badge.fury.io/rb/gastly.svg)](http://badge.fury.io/rb/gastly)
+[![Dependency Status](https://gemnasium.com/mgrachev/gastly.svg)](https://gemnasium.com/mgrachev/gastly)
+[![Code Climate](https://codeclimate.com/github/mgrachev/gastly/badges/gpa.svg)](https://codeclimate.com/github/mgrachev/gastly)
+
 Create screenshots or previews of web pages using Gastly. Under the hood Phantom.js and MiniMagick. Gastly, I choose you!
 
 ![Gastly](https://github.com/mgrachev/gastly/raw/master/gastly.png)
