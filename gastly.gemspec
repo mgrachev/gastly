@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Mikhail Grachev']
   spec.email         = ['work@mgrachev.com']
 
-  spec.summary       = %q{Create screenshots or previews of web pages using Gastly. Gastly, I choose you!}
-  spec.description   = %q{Create screenshots or previews of web pages using Gastly. Under the hood Phantom.js and MiniMagick.}
+  spec.summary       = 'Create screenshots or previews of web pages using Gastly. Gastly, I choose you!'
+  spec.description   = 'Create screenshots or previews of web pages using Gastly. Under the hood Phantom.js and MiniMagick.'
   spec.homepage      = 'https://github.com/mgrachev/gastly'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }

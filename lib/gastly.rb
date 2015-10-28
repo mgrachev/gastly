@@ -4,7 +4,6 @@ require_relative 'gastly/exceptions'
 require_relative 'gastly/version'
 
 module Gastly
-
   def screenshot(url, **kwargs)
     Screenshot.new(url, **kwargs)
   end

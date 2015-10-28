@@ -1,0 +1,27 @@
+AllCops:
+  # Cop names are not displayed in offense messages by default. Change behavior
+  # by overriding DisplayCopNames, or by giving the -D/--display-cop-names
+  # option.
+  DisplayCopNames: true
+  # Style guide URLs are not displayed in offense messages by default. Change
+  # behavior by overriding DisplayStyleGuide, or by giving the
+  # -S/--display-style-guide option.
+  DisplayStyleGuide: true
+  Exclude:
+    - 'bin/**/*'
+    - 'spec/**/*'
+    - 'vendor/**/*'
+
+# Missing top-level class documentation comment
+Style/Documentation:
+  Enabled: false
+
+# Line is too long
+# https://github.com/bbatsov/ruby-style-guide#80-character-limits
+Metrics/LineLength:
+  Max: 180 # 80
+
+# Assignment Branch Condition size for perform is too high
+# http://c2.com/cgi/wiki?AbcMetric
+Metrics/AbcSize:
+  Enabled: false

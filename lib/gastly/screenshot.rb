@@ -4,7 +4,6 @@ require 'active_support/core_ext/object/blank'
 
 module Gastly
   class Screenshot
-
     SCRIPT_PATH = File.expand_path('../script.js', __FILE__)
     DEFAULT_TIMEOUT = 0
     DEFAULT_BROWSER_WIDTH = 1440
@@ -81,8 +80,7 @@ module Gastly
               when /^RuntimeError:(.+)/m  then Gastly::PhantomJSError
               end
 
-      raise error, $1
+      fail error, Regexp.last_match(1)
     end
-
   end
 end

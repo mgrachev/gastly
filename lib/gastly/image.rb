@@ -2,7 +2,6 @@ require 'mini_magick'
 
 module Gastly
   class Image
-
     attr_reader :file
 
     def initialize(tempfile)
@@ -23,6 +22,5 @@ module Gastly
       @file.write(output)
       output
     end
-
   end
 end
