@@ -4,7 +4,7 @@
 [![Dependency Status](https://gemnasium.com/mgrachev/gastly.svg)](https://gemnasium.com/mgrachev/gastly)
 [![Code Climate](https://codeclimate.com/github/mgrachev/gastly/badges/gpa.svg)](https://codeclimate.com/github/mgrachev/gastly)
 
-Create screenshots or previews of web pages using Gastly. Under the hood Phantom.js and MiniMagick. Gastly, I choose you!
+Create screenshots or previews of web pages using Gastly. Under the hood [Phantom.js](https://github.com/ariya/phantomjs/) and [MiniMagick](https://github.com/minimagick/minimagick). Gastly, I choose you!
 
 ![Gastly](https://github.com/mgrachev/gastly/raw/master/gastly.png)
 
@@ -39,7 +39,7 @@ screenshot.browser_width = 1280 # Default: 1440px
 screenshot.browser_height = 780 # Default: 900px
 screenshot.timeout = 1000 # Default: 0 seconds
 screenshot.cookies = { user_id: 1, auth_token: 'abcd' } # If you need
-screenshot.proxy_host = '10.10.10.1' # If you want to use a proxy
+screenshot.proxy_host = '10.10.10.1' # If you want to use a http proxy
 screenshot.proxy_port = '8080'
 image = screenshot.capture
 ```
