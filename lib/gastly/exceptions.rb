@@ -7,5 +7,5 @@ module Gastly
     end
   end
 
-  PhantomJSError = Class.new(StandardError)
+  PhantomJSError = Class.new(RuntimeError)
 end
