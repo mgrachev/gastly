@@ -1,3 +1,9 @@
+## 0.2.3 (23/11/2015)
+
+### Enhancements
+
+* Suppress client errors
+
 ## 0.2.2 (19/08/2015)
 
 ### Enhancements
