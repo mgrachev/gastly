@@ -11,32 +11,21 @@ module Gastly
     DEFAULT_FILE_NAME = 'output'.freeze
     DEFAULT_FILE_FORMAT = '.png'.freeze
 
+    attr_reader :tempfile
     attr_writer :timeout, :browser_width, :browser_height
     attr_accessor :url, :selector, :cookies, :proxy_host, :proxy_port
-    attr_reader :tempfile
 
     def initialize(url, **kwargs)
       kwargs.assert_valid_keys(:timeout, :browser_width, :browser_height, :selector, :cookies, :proxy_host, :proxy_port)
 
       @url = url
-      @tempfile = Tempfile.new([DEFAULT_FILE_NAME, DEFAULT_FILE_FORMAT])
-      self.cookies = kwargs.delete(:cookies)
+      @tempfile = Tempfile.new([DEFAULT_FILE_NAME, DEFAULT_FILE_FORMAT]) # TODO: Use MiniMagick::Image.create instead
+      self.cookies = kwargs.delete(:cookies) # TODO: Why self?
 
       kwargs.each { |key, value| instance_variable_set(:"@#{key}", value) }
     end
 
-    def timeout
-      @timeout || DEFAULT_TIMEOUT
-    end
-
-    def browser_width
-      @browser_width || DEFAULT_BROWSER_WIDTH
-    end
-
-    def browser_height
-      @browser_height || DEFAULT_BROWSER_HEIGHT
-    end
-
+    # @return [Gastly::Image] Instance of Gastly::Image
     def capture
       Phantomjs.proxy_host = proxy_host if proxy_host
       Phantomjs.proxy_port = proxy_port if proxy_port
@@ -46,6 +35,13 @@ module Gastly
       handle_exception(output) if output.present?
 
       Gastly::Image.new(tempfile)
+    end
+
+    %w(timeout browser_width browser_height).each do |name|
+      define_method name do                                 # def timeout
+        instance_variable_get("@#{name}") ||                #   @timeout ||
+            self.class.const_get("default_#{name}".upcase)  #       self.class.const_get('DEFAULT_TIMEOUT')
+      end                                                   # end
     end
 
     private
@@ -70,6 +66,7 @@ module Gastly
       hash_to_array(params)
     end
 
+    # TODO: Rename method to parameterize
     def hash_to_array(data)
       data.map { |key, value| "#{key}=#{value}" }
     end
