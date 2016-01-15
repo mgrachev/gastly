@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-Rspec.describe Gastly::Image do
+RSpec.describe Gastly::Image do
 
 end
