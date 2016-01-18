@@ -2,7 +2,18 @@ require 'spec_helper'
 
 RSpec.describe Gastly::Screenshot do
   let(:url) { 'http://google.com' }
-  subject { described_class.new(url) }
+  let(:params) do
+    {
+        selector:       '#hplogo',
+        browser_width:  1280,
+        browser_height: 780,
+        timeout:        1000,
+        cookies:        { user_id: 1, auth_token: 'abcd' },
+        proxy_host:     '10.10.10.1',
+        proxy_port:     '8080'
+    }
+  end
+  subject { Gastly::Screenshot.new(url) }
 
   # Constants
   it { expect(Gastly::Screenshot::SCRIPT_PATH).to eq File.expand_path('../../../lib/gastly/script.js', __FILE__) }
@@ -11,6 +22,50 @@ RSpec.describe Gastly::Screenshot do
   it { expect(Gastly::Screenshot::DEFAULT_BROWSER_HEIGHT).to eq 900 }
   it { expect(Gastly::Screenshot::DEFAULT_FILE_NAME).to eq 'output' }
   it { expect(Gastly::Screenshot::DEFAULT_FILE_FORMAT).to eq '.png' }
+
+  context '#initialize' do
+    it 'sets instance variables' do
+      screenshot = Gastly::Screenshot.new(url, params)
+      params.each do |key, value|
+        expect(screenshot.public_send(key)).to eq value
+      end
+    end
+
+    it 'raises an argument error' do
+      expect { Gastly::Screenshot.new(url, url: url) }.to raise_error(ArgumentError)
+    end
+  end
+
+  context '#capture' do
+    it 'configures proxy' do
+      expect(Phantomjs).to receive(:run)
+      expect(Phantomjs).to receive(:proxy_host=).with(params[:proxy_host])
+      expect(Phantomjs).to receive(:proxy_port=).with(params[:proxy_port])
+      expect_any_instance_of(Gastly::Image).to receive(:initialize)
+      Gastly::Screenshot.new(url, params).capture
+    end
+
+    it 'runs js script' do
+      expect_any_instance_of(Gastly::Image).to receive(:initialize)
+
+      screenshot = Gastly::Screenshot.new(url, params)
+      cookies = params[:cookies].map { |key, value| "#{key}=#{value}" }.join(',')
+      args = [
+        "--proxy=#{params[:proxy_host]}:#{params[:proxy_port]}",
+        Gastly::Screenshot::SCRIPT_PATH,
+        "url=#{url}",
+        "timeout=#{params[:timeout]}",
+        "width=#{params[:browser_width]}",
+        "height=#{params[:browser_height]}",
+        "output=#{screenshot.tempfile.path}",
+        "selector=#{params[:selector]}",
+        "cookies=#{cookies}"
+      ]
+
+      expect(Phantomjs).to receive(:run).with(*args)
+      screenshot.capture
+    end
+  end
 
   context '#timeout' do
     it 'returns default timeout' do
