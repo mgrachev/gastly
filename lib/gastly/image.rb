@@ -1,33 +1,29 @@
-require 'mini_magick'
-
 module Gastly
   class Image
-    attr_reader :file
+    attr_reader :image
 
-    # @param tempfile [Tempfile] Screenshot
-    def initialize(tempfile)
-      @file = MiniMagick::Image.open(tempfile.path)
-      tempfile.unlink
+    # @param image [MiniMagick::Image] Instance of MiniMagick::Image
+    def initialize(image)
+      @image = image
     end
 
-    # @param [Hash]
-    # @option width [Fixnum] Image width
-    # @option height [Fixnum] Image height
+    # @param width [Fixnum] Image width
+    # @param height [Fixnum] Image height
     def resize(width:, height:)
       dimensions = "#{width}x#{height}"
-      @file.resize(dimensions)
+      image.resize(dimensions)
     end
 
     # @param ext [String] Image extension
     # @return [MiniMagick::Image] Instance
     def format(ext)
-      @file.format(ext)
+      image.format(ext)
     end
 
-    # @param output [String] Full path to file
-    # @return [String] Full path to file
+    # @param output [String] Full path to image
+    # @return [String] Full path to image
     def save(output)
-      @file.write(output)
+      image.write(output)
       output
     end
   end

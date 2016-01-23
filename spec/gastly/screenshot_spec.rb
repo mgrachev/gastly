@@ -20,7 +20,6 @@ RSpec.describe Gastly::Screenshot do
   it { expect(Gastly::Screenshot::DEFAULT_TIMEOUT).to eq 0 }
   it { expect(Gastly::Screenshot::DEFAULT_BROWSER_WIDTH).to eq 1440 }
   it { expect(Gastly::Screenshot::DEFAULT_BROWSER_HEIGHT).to eq 900 }
-  it { expect(Gastly::Screenshot::DEFAULT_FILE_NAME).to eq 'output' }
   it { expect(Gastly::Screenshot::DEFAULT_FILE_FORMAT).to eq '.png' }
 
   context '#initialize' do
@@ -57,13 +56,36 @@ RSpec.describe Gastly::Screenshot do
         "timeout=#{params[:timeout]}",
         "width=#{params[:browser_width]}",
         "height=#{params[:browser_height]}",
-        "output=#{screenshot.tempfile.path}",
+        "output=#{screenshot.image.path}",
         "selector=#{params[:selector]}",
         "cookies=#{cookies}"
       ]
 
       expect(Phantomjs).to receive(:run).with(*args)
       screenshot.capture
+    end
+
+    it 'raises an exception if fetch error' do
+      url = 'h11p://google.com'
+      screenshot = Gastly::Screenshot.new(url)
+      expect { screenshot.capture }.to raise_error(Gastly::FetchError, "Unable to load #{url}")
+    end
+
+    it 'raises an exception if runtime error' do
+      expect(Phantomjs).to receive(:run).and_return('RuntimeError:test runtime error')
+      screenshot = Gastly::Screenshot.new(url)
+      expect { screenshot.capture }.to raise_error(Gastly::PhantomJSError, 'test runtime error')
+    end
+
+    it 'raises an exception if unknown error' do
+      expect(Phantomjs).to receive(:run).and_return('unknown error')
+      screenshot = Gastly::Screenshot.new(url)
+      expect { screenshot.capture }.to raise_error(Gastly::UnknownError)
+    end
+
+    it 'returns an instance of Gastly::Image' do
+      screenshot = Gastly::Screenshot.new(url)
+      expect(screenshot.capture).to be_instance_of Gastly::Image
     end
   end
 

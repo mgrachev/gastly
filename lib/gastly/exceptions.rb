@@ -8,4 +8,5 @@ module Gastly
   end
 
   PhantomJSError = Class.new(RuntimeError)
+  UnknownError   = Class.new(RuntimeError)
 end

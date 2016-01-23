@@ -1,17 +1,12 @@
-require 'phantomjs'
-require 'active_support/core_ext/hash/keys'
-require 'active_support/core_ext/object/blank'
-
 module Gastly
   class Screenshot
     SCRIPT_PATH = File.expand_path('../script.js', __FILE__)
     DEFAULT_TIMEOUT = 0
     DEFAULT_BROWSER_WIDTH = 1440
     DEFAULT_BROWSER_HEIGHT = 900
-    DEFAULT_FILE_NAME = 'output'.freeze
     DEFAULT_FILE_FORMAT = '.png'.freeze
 
-    attr_reader :tempfile
+    attr_reader :image
     attr_writer :timeout, :browser_width, :browser_height
     attr_accessor :url, :selector, :cookies, :proxy_host, :proxy_port
 
@@ -22,12 +17,11 @@ module Gastly
       @url = url
       @cookies = kwargs.delete(:cookies)
 
-      @tempfile = Tempfile.new([DEFAULT_FILE_NAME, DEFAULT_FILE_FORMAT]) # TODO: Use MiniMagick::Image.create instead
+      @image = MiniMagick::Image.create(DEFAULT_FILE_FORMAT, false) # Disable validation
 
       kwargs.each { |key, value| instance_variable_set(:"@#{key}", value) }
     end
 
-    #
     # Capture image via PhantomJS and save to output file
     #
     # @return [Gastly::Image] Instance of Gastly::Image
@@ -37,10 +31,9 @@ module Gastly
       Phantomjs.proxy_port = proxy_port if proxy_port
 
       output = Phantomjs.run(proxy_options, SCRIPT_PATH.to_s, *prepared_params)
+      handle_output(output)
 
-      handle_exception(output) if output.present? # TODO: Add test
-
-      Gastly::Image.new(tempfile) # TODO: Add test
+      Gastly::Image.new(image)
     end
 
     %w(timeout browser_width browser_height).each do |name|
@@ -63,26 +56,28 @@ module Gastly
         timeout:  timeout,
         width:    browser_width,
         height:   browser_height,
-        output:   tempfile.path
+        output:   image.path
       }
 
       params[:selector] = selector if selector.present?
-      params[:cookies]  = hash_to_array(cookies).join(',') if cookies.present?
+      params[:cookies]  = parameterize(cookies).join(',') if cookies.present?
 
-      hash_to_array(params)
+      parameterize(params)
     end
 
-    # TODO: Rename method to parameterize
-    def hash_to_array(data)
-      data.map { |key, value| "#{key}=#{value}" }
+    # @param hash [Hash]
+    # @return [Array] Array of parameterized strings
+    def parameterize(hash)
+      hash.map { |key, value| "#{key}=#{value}" }
     end
 
-    # TODO: Rename to handle_output
-    def handle_exception(output)
+    def handle_output(output)
+      return unless output.present?
+
       error = case output
               when /^FetchError:(.+)/     then Gastly::FetchError
               when /^RuntimeError:(.+)/m  then Gastly::PhantomJSError
-              # TODO: Return unknown error
+              else UnknownError
               end
 
       fail error, Regexp.last_match(1)
