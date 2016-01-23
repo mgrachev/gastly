@@ -13,9 +13,7 @@ describe Gastly do
     it 'creates a screenshot' do
       tmp = 'spec/support/tmp'
       path = "#{tmp}/output.png"
-      expect(Dir.glob("#{tmp}/*").length).to eq 0
-      Gastly.capture(url, path)
-      expect(Dir.glob("#{tmp}/*").length).to eq 1
+      expect { Gastly.capture(url, path) }.to change { Dir.glob("#{tmp}/*").length }.by(1)
       FileUtils.rm Dir.glob("#{tmp}/*")
     end
   end

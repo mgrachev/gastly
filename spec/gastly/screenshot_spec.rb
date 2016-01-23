@@ -40,13 +40,10 @@ RSpec.describe Gastly::Screenshot do
       expect(Phantomjs).to receive(:run)
       expect(Phantomjs).to receive(:proxy_host=).with(params[:proxy_host])
       expect(Phantomjs).to receive(:proxy_port=).with(params[:proxy_port])
-      expect_any_instance_of(Gastly::Image).to receive(:initialize)
       Gastly::Screenshot.new(url, params).capture
     end
 
     it 'runs js script' do
-      expect_any_instance_of(Gastly::Image).to receive(:initialize)
-
       screenshot = Gastly::Screenshot.new(url, params)
       cookies = params[:cookies].map { |key, value| "#{key}=#{value}" }.join(',')
       args = [
