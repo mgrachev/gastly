@@ -4,6 +4,7 @@
 [![Dependency Status](https://gemnasium.com/mgrachev/gastly.svg)](https://gemnasium.com/mgrachev/gastly)
 [![Code Climate](https://codeclimate.com/github/mgrachev/gastly/badges/gpa.svg)](https://codeclimate.com/github/mgrachev/gastly)
 [![Build Status](https://travis-ci.org/mgrachev/gastly.svg?branch=master)](https://travis-ci.org/mgrachev/gastly)
+[![Coverage Status](https://coveralls.io/repos/github/mgrachev/gastly/badge.svg?branch=master)](https://coveralls.io/github/mgrachev/gastly?branch=master)
 
 Create screenshots or previews of web pages using Gastly. Under the hood [Phantom.js](https://github.com/ariya/phantomjs/) and [MiniMagick](https://github.com/minimagick/minimagick). Gastly, I choose you!
 
