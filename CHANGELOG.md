@@ -1,3 +1,9 @@
+## 0.2.4 (24/01/2016)
+
+### Enhancements
+
+* Code optimization
+
 ## 0.2.3 (23/11/2015)
 
 ### Enhancements
