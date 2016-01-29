@@ -1,3 +1,9 @@
+## 0.3.0 (29/01/2016)
+
+### Enhancements
+
+* Update PhantomJS version to 2.1.1
+
 ## 0.2.4 (24/01/2016)
 
 ### Enhancements
