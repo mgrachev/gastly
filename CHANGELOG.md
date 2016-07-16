@@ -1,3 +1,9 @@
+## 1.0.0 (16/07/2016)
+
+### Enhancements
+
+* Remove support ActiveSupport
+
 ## 0.3.0 (29/01/2016)
 
 ### Enhancements
