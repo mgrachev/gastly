@@ -1,8 +1,7 @@
 require 'phantomjs'
 require 'mini_magick'
-require 'active_support/core_ext/hash/keys'
-require 'active_support/core_ext/object/blank'
 
+require_relative 'gastly/utils'
 require_relative 'gastly/phantomjs_patch'
 require_relative 'gastly/image'
 require_relative 'gastly/screenshot'

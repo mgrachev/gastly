@@ -12,7 +12,8 @@ module Gastly
 
     # @param url [String] The full url to the site
     def initialize(url, **kwargs)
-      kwargs.assert_valid_keys(:timeout, :browser_width, :browser_height, :selector, :cookies, :proxy_host, :proxy_port)
+      hash = Gastly::Utils::Hash.new(kwargs)
+      hash.assert_valid_keys(:timeout, :browser_width, :browser_height, :selector, :cookies, :proxy_host, :proxy_port)
 
       @url = url
       @cookies = kwargs.delete(:cookies)
@@ -39,14 +40,14 @@ module Gastly
     %w(timeout browser_width browser_height).each do |name|
       define_method name do                                 # def timeout
         instance_variable_get("@#{name}") ||                #   @timeout ||
-            self.class.const_get("default_#{name}".upcase)  #       self.class.const_get('DEFAULT_TIMEOUT')
+          self.class.const_get("default_#{name}".upcase)    #     self.class.const_get('DEFAULT_TIMEOUT')
       end                                                   # end
     end
 
     private
 
     def proxy_options
-      return '' if proxy_host.blank? && proxy_port.blank?
+      return '' if proxy_host.nil? && proxy_port.nil?
       "--proxy=#{proxy_host}:#{proxy_port}"
     end
 
@@ -59,8 +60,8 @@ module Gastly
         output:   image.path
       }
 
-      params[:selector] = selector if selector.present?
-      params[:cookies]  = parameterize(cookies).join(',') if cookies.present?
+      params[:selector] = selector if selector
+      params[:cookies]  = parameterize(cookies).join(',') if cookies
 
       parameterize(params)
     end
@@ -71,10 +72,11 @@ module Gastly
       hash.map { |key, value| "#{key}=#{value}" }
     end
 
-    def handle_output(output)
+    def handle_output(out)
+      output = Gastly::Utils::String.new(out)
       return unless output.present?
 
-      error = case output
+      error = case output.string
               when /^FetchError:(.+)/     then Gastly::FetchError
               when /^RuntimeError:(.+)/m  then Gastly::PhantomJSError
               else UnknownError

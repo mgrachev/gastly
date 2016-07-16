@@ -4,6 +4,8 @@ module Phantomjs
   end
 
   class Platform
+    RETRY_COUNT = 5
+
     class << self
       def install!
         STDERR.puts "Phantomjs does not appear to be installed in #{phantomjs_path}, installing!"
@@ -16,18 +18,18 @@ module Phantomjs
         FileUtils.mkdir_p temp_dir
 
         Dir.chdir temp_dir do
-          unless download_via_curl or download_via_wget
-            raise "\n\nFailed to load phantomjs! :(\nYou need to have cURL or wget installed on your system.\nIf you have, the source of phantomjs might be unavailable: #{package_url}\n\n"
+          unless download_via_curl || download_via_wget
+            fail "\n\nFailed to load phantomjs! :(\nYou need to have cURL or wget installed on your system.\nIf you have, the source of phantomjs might be unavailable: #{package_url}\n\n"
           end
 
           case package_url.split('.').last
-            when 'bz2'
-              system "bunzip2 #{File.basename(package_url)}"
-              system "tar xf #{File.basename(package_url).sub(/\.bz2$/, '')}"
-            when 'zip'
-              system "unzip #{File.basename(package_url)}"
-            else
-              raise "Unknown compression format for #{File.basename(package_url)}"
+          when 'bz2'
+            system "bunzip2 #{File.basename(package_url)}"
+            system "tar xf #{File.basename(package_url).sub(/\.bz2$/, '')}"
+          when 'zip'
+            system "unzip #{File.basename(package_url)}"
+          else
+            fail "Unknown compression format for #{File.basename(package_url)}"
           end
 
           # Find the phantomjs build we just extracted
@@ -52,27 +54,31 @@ module Phantomjs
           end
         end
 
-        raise 'Failed to install phantomjs. Sorry :(' unless File.exist?(phantomjs_path)
+        fail 'Failed to install phantomjs. Sorry :(' unless File.exist?(phantomjs_path)
       end
 
       private
 
       def download_via_curl
-        system "curl -L -O #{package_url} #{curl_proxy_options}"
+        system "curl -L --retry #{RETRY_COUNT} -O #{package_url} #{curl_proxy_options}"
       end
 
       def download_via_wget
-        system "wget #{package_url} #{wget_proxy_options}"
+        system "wget -t #{RETRY_COUNT} #{package_url} #{wget_proxy_options}"
       end
 
       def curl_proxy_options
-        return '' if Phantomjs.proxy_host.nil? && Phantomjs.proxy_port.nil?
+        return '' if proxy_options_exist?
         "-x #{Phantomjs.proxy_host}:#{Phantomjs.proxy_port}"
       end
 
       def wget_proxy_options
-        return '' if Phantomjs.proxy_host.nil? && Phantomjs.proxy_port.nil?
+        return '' if proxy_options_exist?
         "-e use_proxy=yes -e http_proxy=#{Phantomjs.proxy_host}:#{Phantomjs.proxy_port}"
+      end
+
+      def proxy_options_exist?
+        Phantomjs.proxy_host.nil? && Phantomjs.proxy_port.nil?
       end
     end
   end
