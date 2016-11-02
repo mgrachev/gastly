@@ -43,6 +43,7 @@ screenshot.timeout = 1000 # Default: 0 seconds
 screenshot.cookies = { user_id: 1, auth_token: 'abcd' } # If you need
 screenshot.proxy_host = '10.10.10.1' # If you want to use a http proxy
 screenshot.proxy_port = '8080'
+screenshot.phantomjs_options = '--ignore-ssl-errors=true'
 image = screenshot.capture
 ```
 

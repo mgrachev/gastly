@@ -1,3 +1,10 @@
+## 1.0.1 (02/11/2016)
+
+### Enhancements
+
+* Added ability to send CLI options to PhantomJS ([#6](https://github.com/mgrachev/gastly/pull/6))
+* Required ruby version is 2.1.0 or higher
+
 ## 1.0.0 (16/07/2016)
 
 ### Enhancements
