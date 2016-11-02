@@ -4,13 +4,14 @@ RSpec.describe Gastly::Screenshot do
   let(:url) { 'http://google.com' }
   let(:params) do
     {
-        selector:       '#hplogo',
-        browser_width:  1280,
-        browser_height: 780,
-        timeout:        1000,
-        cookies:        { user_id: 1, auth_token: 'abcd' },
-        proxy_host:     '10.10.10.1',
-        proxy_port:     '8080'
+      selector:          '#hplogo',
+      browser_width:     1280,
+      browser_height:    780,
+      timeout:           1000,
+      cookies:           { user_id: 1, auth_token: 'abcd' },
+      proxy_host:        '10.10.10.1',
+      proxy_port:        '8080',
+      phantomjs_options: '--load-images=false'
     }
   end
   subject { Gastly::Screenshot.new(url) }
@@ -47,7 +48,7 @@ RSpec.describe Gastly::Screenshot do
       screenshot = Gastly::Screenshot.new(url, params)
       cookies = params[:cookies].map { |key, value| "#{key}=#{value}" }.join(',')
       args = [
-        "--proxy=#{params[:proxy_host]}:#{params[:proxy_port]}",
+        "--proxy=#{params[:proxy_host]}:#{params[:proxy_port]} #{params[:phantomjs_options]}",
         Gastly::Screenshot::SCRIPT_PATH,
         "url=#{url}",
         "timeout=#{params[:timeout]}",

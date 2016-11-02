@@ -8,12 +8,12 @@ module Gastly
 
     attr_reader :image
     attr_writer :timeout, :browser_width, :browser_height
-    attr_accessor :url, :selector, :cookies, :proxy_host, :proxy_port
+    attr_accessor :url, :selector, :cookies, :proxy_host, :proxy_port, :phantomjs_options
 
     # @param url [String] The full url to the site
     def initialize(url, **kwargs)
       hash = Gastly::Utils::Hash.new(kwargs)
-      hash.assert_valid_keys(:timeout, :browser_width, :browser_height, :selector, :cookies, :proxy_host, :proxy_port)
+      hash.assert_valid_keys(:timeout, :browser_width, :browser_height, :selector, :cookies, :proxy_host, :proxy_port, :phantomjs_options)
 
       @url = url
       @cookies = kwargs.delete(:cookies)
@@ -31,7 +31,7 @@ module Gastly
       Phantomjs.proxy_host = proxy_host if proxy_host
       Phantomjs.proxy_port = proxy_port if proxy_port
 
-      output = Phantomjs.run(proxy_options, SCRIPT_PATH.to_s, *prepared_params)
+      output = Phantomjs.run(options, SCRIPT_PATH.to_s, *prepared_params)
       handle_output(output)
 
       Gastly::Image.new(image)
@@ -45,6 +45,10 @@ module Gastly
     end
 
     private
+
+    def options
+      [proxy_options, phantomjs_options].join(' ').strip
+    end
 
     def proxy_options
       return '' if proxy_host.nil? && proxy_port.nil?
