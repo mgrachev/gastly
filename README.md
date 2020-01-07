@@ -1,4 +1,4 @@
-# Gastly
+# 👻 Gastly
 
 [![Gem Version](https://badge.fury.io/rb/gastly.svg)](http://badge.fury.io/rb/gastly)
 [![Dependency Status](https://gemnasium.com/mgrachev/gastly.svg)](https://gemnasium.com/mgrachev/gastly)
