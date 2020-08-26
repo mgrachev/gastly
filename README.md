@@ -56,10 +56,11 @@ screenshot = Gastly.screenshot('http://google.com', selector: '#hplogo', timeout
 image = screenshot.capture
 ```
 
-You can resize or change the format of the screenshot:
+You can resize, crop or change the format of the screenshot:
 
 ```ruby
 image = screenshot.capture
+image.crop(width: 250, height: 250, x: 10, y: 0) # Crop with an offset
 image.resize(width: 110, height: 110) # Creates a preview of the web page
 image.format('png')
 image.save('output.png')
