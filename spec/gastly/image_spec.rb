@@ -12,6 +12,14 @@ RSpec.describe Gastly::Image do
     end
   end
 
+  context '#crop' do
+    it 'invokes method #crop with arguments' do
+      width, height, x, y = 100, 100, 0, 0
+      expect_any_instance_of(MiniMagick::Image).to receive(:crop).with("#{width}x#{height}+#{x}+#{y}")
+      subject.crop(width: 100, height: 100, x: 0, y: 0)
+    end
+  end
+
   context '#format' do
     it 'invokes method #format' do
       ext = 'png'
